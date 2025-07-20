@@ -13,6 +13,24 @@ A key novelty of this work lies in the integration of Explainable AI (XAI). Alon
 This research aims to lay the groundwork for a more secure, adaptive, and trustworthy PoS framework—one that not only mitigates known threats but also evolves with the network, all while upholding the principles of decentralization, transparency, and user trust that define blockchain technology.
 
 
+### Methodology
+The present research proposes a comprehensive methodology to develop and assess an AI-driven, explainable validator selection framework for Proof-of-Stake (PoS) blockchain networks. The methodology is structured to address persistent security challenges, including Sybil and long-range attacks, as well as the “nothing-at-stake” dilemma, through the integration of multi-agent reinforcement learning (MARL) and explainable artificial intelligence (XAI) principles.
+
+Initially, empirical data will be gathered from real-world, publicly available PoS blockchain networks, such as Ethereum 2.0, Cosmos, and Polkadot. These datasets will be augmented with synthetic data generated from simulator-driven scenarios, enabling the modeling of both normative and adversarial validator behaviors. Data preprocessing and feature engineering should focus on extracting relevant indicators, including block proposal and attestation histories, slashing events, stake volumes, node uptime statistics, communication patterns, and deviations from expected consensus participation.
+
+A modular, agent-based simulation environment will then be established to replicate PoS network dynamics. This environment faithfully reproduces honest validator behavior and introduces parameterized adversarial actors, simulating attacks under varying network and threat conditions. The simulation framework will be designed to test the robustness and adaptability of the proposed validator selection mechanism under diverse and randomized scenarios.
+
+Central to this methodology is the development of a MARL model, where each validator node is represented as an autonomous agent. The state space for each agent encapsulates historical and behavioral metrics, combined with current network statistics and aggregated peer feedback. Agents select their actions from options such as block proposal participation, attestation, abstention, and communication adjustments. The reward structure encourages honest, continuous participation and accurate identification of malicious activity, while penalizing suspicious conduct, non-participation, and effective attacks. Algorithm selection includes the evaluation of MARL paradigms such as QMIX and Multi-Agent Deep Deterministic Policy Gradient (MADDPG), with agent policies refined through episodic simulation training under escalating adversarial conditions.
+
+A dynamic trust scoring mechanism is layered atop the MARL framework. Each validator’s trust score synthesizes outcomes from the MARL agent’s recent and historical behaviors, including proposal quality, consistency, peer review, and responsiveness to network threats. These scores are used to prioritize validators in future selection rounds, superseding static, stake-only ranking systems and allowing for the proactive exclusion or penalization of suspected adversaries.
+
+To ensure transparency and auditability, explainable AI techniques are applied following the MARL decision processes. Post-hoc analysis tools such as SHAP and LIME are utilized to highlight the primary features and behaviors influencing validator selection and penalty outcomes. Human-interpretable explanations are generated for each significant decision, and a dashboard is proposed to visualize trust evolution, decision rationales, and notable incidents throughout the simulation cycles.
+
+For evaluation, the framework is assessed using comprehensive security, fairness, performance, and explainability metrics. Security is evaluated by measuring the frequency and severity of successful attacks, while fairness focuses on the equitable distribution of validation opportunities across the network. System performance is determined through metrics like confirmation latency and network throughput. The interpretability and usability of explanations are evaluated by means of expert user studies and qualitative audits. Comparative analysis is conducted against traditional selection schemes, such as random, pure stake-based, and uptime-based methods, along with ablation studies to determine the impact of individual framework components.
+
+All code, simulation environments, datasets, and model parameters will be implemented using Python and relevant machine learning and XAI libraries. The full experimental pipeline, including documentation and reproducibility instructions, will be released under an open-source license to facilitate verification and extension by the research community.
+
+
 
 
 
