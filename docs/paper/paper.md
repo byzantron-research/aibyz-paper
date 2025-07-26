@@ -37,6 +37,29 @@ For evaluation, the framework is assessed using comprehensive security, fairness
 All code, simulation environments, datasets, and model parameters will be implemented using Python and relevant machine learning and XAI libraries. The full experimental pipeline, including documentation and reproducibility instructions, will be released under an open-source license to facilitate verification and extension by the research community. 
 
 
+### Dataset
+
+***1. Collect Real-World Data***
+We will gather open-source validator data from active Proof-of-Stake blockchains including Ethereum 2.0, Cosmos, and Polkadot. Using public APIs such as Beaconcha.in, Cosmos SDK, Subscan, and platforms like Dune Analytics and Rated.network, we will extract validator behavior logs—covering metrics like uptime, missed attestations, proposal counts, and slashing history. These serve as the foundation of our dataset and reflect actual validator performance in decentralized environments. 
+
+![DatasetCollection](./assets/CollectData.jpg)
+
+***2. Generate Synthetic Data***
+To complement real-world data and introduce labeled adversarial behavior, we simulate a PoS blockchain using agent-based environments (Python + SimPy + NetworkX). We model validators with predefined behaviors such as honest, lazy, selfish, Sybil, and long-range attackers. These synthetic logs are essential for training and benchmarking our AI models, particularly when real-world data lacks explicit behavioral labels. 
+
+![SyntheticDataset](./assets/GenerateSyntheticData.jpg)
+
+***3. Enrich the Dataset***
+Next, we enhance the dataset with engineered features like trust scores, message entropy, peer feedback ratings, and consensus deviation. Validators’ actions are tracked over multiple epochs to construct a time-series view. We label behaviors using rule-based heuristics and merge real and synthetic data, creating a hybrid dataset that supports both supervised learning and MARL-based training.
+
+![EnrichDataset](./assets/EnrichDataset.jpg)
+
+***4. Finalize the Dataset***
+In the final stage, we package the dataset with complete metadata, schema descriptions, and licensing. CSVs and JSONs are exported for reproducibility. All fields—such as validator ID, trust score, and behavior class—are clearly documented. The dataset is versioned and published under an open-source license (e.g., CC-BY-4.0) on platforms like GitHub or Zenodo, supporting public reuse and extension by future researchers. 
+
+![FinalizeDataset](./assets/FinalizeDataset.jpg)
+
+
 ### ***References***
 - 1. *S. King and S. Nadal, “PPCoin: Peer-to-Peer Crypto-Currency with Proof-of-Stake,” Aug. 2012.*
 
