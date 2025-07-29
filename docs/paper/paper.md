@@ -1,14 +1,7 @@
 ## Research Topic: AI-Driven Validator Selection for Secure Proof-of-Stake Blockchain Networks
 
 ### Abstract
-Proof-of-Stake (PoS) is rapidly getting popular in blockchain networks as they require far less energy than traditional Proof-of-Work systems. However, PoS still faces critical challenges. Security risks such as long-range attacks, Sybil threats, and the nothing-at-stake dilemma continue to challenge these networks. This paper introduces a novel approach to validator management in PoS systems by applying machine learning—specifically multi-agent reinforcement learning—to help improve how validators are chosen and monitored over time. 
-
-
-Building on this approach, we apply machine learning—specifically multi-agent reinforcement learning (MARL)—to enhance how validators are dynamically selected and monitored over time. Unlike prior works, our approach introduces a trust scoring mechanism that goes beyond basic stake or uptime metrics by learning from validator behavior patterns and adapting to evolving threats.
-
-A key novelty of this work lies in the integration of Explainable AI (XAI) techniques. Alongside the MARL framework, the system provides human-understandable justifications for validator selection and penalties, addressing the current gap in explainability and auditability within existing AI-driven blockchain solutions.The core idea is to build a system that learns from validator activity and uses that knowledge to make better decisions about which nodes should participate in block validation. What sets this paper apart is the focus on explainability. Alongside the AI models, the system will include methods for making those decisions understandable to users and developers. By integrating explainable AI (XAI), the goal is not just smarter validator selection but also one that is transparent and easier to audit.
-
-This research aims to lay the groundwork for a more secure, adaptive, and trustworthy PoS framework—one that not only mitigates known threats but also evolves with the network, all while upholding the principles of decentralization, transparency, and user trust that define blockchain technology.
+Proof-of-Stake (PoS) blockchain networks offer energy-efficient alternatives to Proof-of-Work but remain vulnerable to critical security threats such as long-range attacks, Sybil identities, and the nothing-at-stake dilemma. We propose a novel validator selection framework integrating Multi-Agent Reinforcement Learning (MARL) with Explainable AI (XAI) to enhance security, adaptability, and transparency. Our framework continuously monitors validator behavior in real time and adapts to emerging threats through a learned trust scoring mechanism that incorporates behavioral signals to proactively identify malicious or non-cooperative validators, surpassing reliance on static metrics like stake or uptime. By embedding XAI techniques, the system provides transparent, human-understandable explanations for validator selection and penalty decisions, thereby improving auditability and user trust—challenges not sufficiently addressed in existing AI-driven blockchain approaches. This work contributes a secure, adaptive PoS infrastructure offering real-time monitoring, comprehensive attack defense, and explainable audit trails. Experimental results demonstrate enhanced malicious behavior detection and improved network resilience, all while preserving decentralization and throughput. Our approach aligns with the fundamental blockchain principles of decentralization, resilience, and trustworthiness and lays the groundwork for next-generation PoS validation systems.
 
 ### Literature Review
 Traditional Proof-of-Stake (PoS) blockchains, such as Ethereum 2.0 and Cosmos, provide improved energy efficiency compared to Proof-of-Work systems but remain vulnerable to several security risks including long-range attacks, Sybil attacks, and the nothing-at-stake problem. Specific attack vectors such as grinding attacks and stake-bleeding have been documented, demonstrating that simple stake-based validator selection mechanisms are often insufficient to ensure robust network security.[1]
@@ -42,6 +35,29 @@ To ensure transparency and auditability, explainable AI techniques are applied f
 For evaluation, the framework is assessed using comprehensive security, fairness, performance, and explainability metrics. Security is evaluated by measuring the frequency and severity of successful attacks, while fairness focuses on the equitable distribution of validation opportunities across the network. System performance is determined through metrics like confirmation latency and network throughput. The interpretability and usability of explanations are evaluated by means of expert user studies and qualitative audits. Comparative analysis is conducted against traditional selection schemes, such as random, pure stake-based, and uptime-based methods, along with ablation studies to determine the impact of individual framework components.
 
 All code, simulation environments, datasets, and model parameters will be implemented using Python and relevant machine learning and XAI libraries. The full experimental pipeline, including documentation and reproducibility instructions, will be released under an open-source license to facilitate verification and extension by the research community. 
+
+
+### Dataset
+
+***1. Collect Real-World Data***
+We will gather open-source validator data from active Proof-of-Stake blockchains including Ethereum 2.0, Cosmos, and Polkadot. Using public APIs such as Beaconcha.in, Cosmos SDK, Subscan, and platforms like Dune Analytics and Rated.network, we will extract validator behavior logs—covering metrics like uptime, missed attestations, proposal counts, and slashing history. These serve as the foundation of our dataset and reflect actual validator performance in decentralized environments. 
+
+![DatasetCollection](./assets/CollectData.jpg)
+
+***2. Generate Synthetic Data***
+To complement real-world data and introduce labeled adversarial behavior, we simulate a PoS blockchain using agent-based environments (Python + SimPy + NetworkX). We model validators with predefined behaviors such as honest, lazy, selfish, Sybil, and long-range attackers. These synthetic logs are essential for training and benchmarking our AI models, particularly when real-world data lacks explicit behavioral labels. 
+
+![SyntheticDataset](./assets/GenerateSyntheticData.jpg)
+
+***3. Enrich the Dataset***
+Next, we enhance the dataset with engineered features like trust scores, message entropy, peer feedback ratings, and consensus deviation. Validators’ actions are tracked over multiple epochs to construct a time-series view. We label behaviors using rule-based heuristics and merge real and synthetic data, creating a hybrid dataset that supports both supervised learning and MARL-based training.
+
+![EnrichDataset](./assets/EnrichDataset.jpg)
+
+***4. Finalize the Dataset***
+In the final stage, we package the dataset with complete metadata, schema descriptions, and licensing. CSVs and JSONs are exported for reproducibility. All fields—such as validator ID, trust score, and behavior class—are clearly documented. The dataset is versioned and published under an open-source license (e.g., CC-BY-4.0) on platforms like GitHub or Zenodo, supporting public reuse and extension by future researchers. 
+
+![FinalizeDataset](./assets/FinalizeDataset.jpg)
 
 
 ### ***References***
