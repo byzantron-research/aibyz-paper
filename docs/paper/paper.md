@@ -59,6 +59,16 @@ In the final stage, we package the dataset with complete metadata, schema descri
 
 ![FinalizeDataset](./assets/FinalizeDataset.jpg)
 
+A detail data collection method is shown below:
+
+![DataCollectionRoadmap](./assets/DataCollectionRoadmap.jpg)
+
+***Short Brief***
+
+The flowchart outlines a structured, four-phase pipeline for building a comprehensive dataset to support AI-driven validator selection in Proof-of-Stake blockchain networks. It begins with collecting authentic validator behavior data from multiple live blockchain APIs across Ethereum, Cosmos, and Polkadot. Parallel to this, synthetic data simulating various validator behaviors, including adversarial actions, is generated using agent-based simulations. Both real and synthetic data then undergo feature engineering and integration to create a rich, unified dataset with key metrics such as trust scores and behavioral indicators. Finally, the dataset is thoroughly documented, versioned, and published in open formats to ensure transparency, reproducibility, and community accessibility, ultimately providing a robust foundation for training and evaluating machine learning models in PoS security research.
+
+
+
 
 ### ***References***
 - 1. *S. King and S. Nadal, “PPCoin: Peer-to-Peer Crypto-Currency with Proof-of-Stake,” Aug. 2012.*
