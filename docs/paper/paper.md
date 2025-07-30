@@ -67,6 +67,29 @@ A detail data collection method is shown below:
 
 The flowchart outlines a structured, four-phase pipeline for building a comprehensive dataset to support AI-driven validator selection in Proof-of-Stake blockchain networks. It begins with collecting authentic validator behavior data from multiple live blockchain APIs across Ethereum, Cosmos, and Polkadot. Parallel to this, synthetic data simulating various validator behaviors, including adversarial actions, is generated using agent-based simulations. Both real and synthetic data then undergo feature engineering and integration to create a rich, unified dataset with key metrics such as trust scores and behavioral indicators. Finally, the dataset is thoroughly documented, versioned, and published in open formats to ensure transparency, reproducibility, and community accessibility, ultimately providing a robust foundation for training and evaluating machine learning models in PoS security research.
 
+### Pseudocode:
+
+***Phase 1:*** Data Collection and Preprocessing
+def collect_real_world_data():
+    real_data = []
+    sources = [Ethereum_API, Cosmos_API, Polkadot_API, DuneAnalytics, RatedNetwork...etc.] ---> *The sites are not finalized yet to fetch the data*
+    for api in sources:
+        real_data.extend(api.fetch_validator_logs())
+    return real_data
+
+def generate_synthetic_data():--->*Function for generating Synth data*
+    synthetic_data = agent_based_simulation(num_validators, scenario_params)
+    return synthetic_data 
+
+def enrich_data(real_data, synthetic_data):---->*Func for making the data enrich*
+    merged = merge_and_label(real_data, synthetic_data)
+    features = feature_engineer(merged)  # trust scores, entropy, peer reviews, etc.
+    return features  
+
+data = enrich_data(collect_real_world_data(), generate_synthetic_data())   
+
+*End of Phase 1*---> remaining phase will publish later
+
 
 
 
