@@ -88,8 +88,47 @@ def enrich_data(real_data, synthetic_data):---->*Func for making the data enrich
 
 data = enrich_data(collect_real_world_data(), generate_synthetic_data())   
 
-*End of Phase 1*---> remaining phase will publish later
+ 
 
+***Phase 2:*** MARL Environment Setup
+class ValidatorAgent:
+    def __init__(self, validator_id):
+        self.id = validator_id
+        self.policy = initialize_policy()
+        self.trust_score = initial_trust()
+
+    def observe(self, network_state):
+        return extract_features(network_state, self.id)
+
+    def act(self, state):
+        # Action: propose block, attest, abstain, communicate, etc.
+        return self.policy.select_action(state)
+
+    def update_policy(self, reward, next_state):
+        self.policy.learn(reward, next_state)
+
+    def update_trust(self, event):
+        self.trust_score = update_trust_score(self.trust_score, event)
+
+agents = [ValidatorAgent(i) for i in validator_ids]
+env = PoSSimulationEnvironment(agents, data) 
+
+*End of Phase 2*
+
+
+***Phase 3:*** MARL Training and Validation Loop
+for episode in range(NUM_EPISODES):
+    state = env.reset()
+    done = False
+    while not done:
+        actions = {agent.id: agent.act(agent.observe(state)) for agent in agents}
+        next_state, rewards, events, done = env.step(actions)
+        for agent in agents:
+            agent.update_policy(rewards[agent.id], agent.observe(next_state))
+            agent.update_trust(events[agent.id])
+        state = next_state
+
+*End of Phase 3*---> remaining phase will publish later
 
 
 
