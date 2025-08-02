@@ -59,6 +59,97 @@ In the final stage, we package the dataset with complete metadata, schema descri
 
 ![FinalizeDataset](./assets/FinalizeDataset.jpg)
 
+A detail data collection method is shown below:
+
+![DataCollectionRoadmap](./assets/DataCollectionRoadmap.jpg)
+
+***Short Brief***
+
+The flowchart outlines a structured, four-phase pipeline for building a comprehensive dataset to support AI-driven validator selection in Proof-of-Stake blockchain networks. It begins with collecting authentic validator behavior data from multiple live blockchain APIs across Ethereum, Cosmos, and Polkadot. Parallel to this, synthetic data simulating various validator behaviors, including adversarial actions, is generated using agent-based simulations. Both real and synthetic data then undergo feature engineering and integration to create a rich, unified dataset with key metrics such as trust scores and behavioral indicators. Finally, the dataset is thoroughly documented, versioned, and published in open formats to ensure transparency, reproducibility, and community accessibility, ultimately providing a robust foundation for training and evaluating machine learning models in PoS security research.
+
+### Pseudocode:
+
+***Phase 1:*** Data Collection and Preprocessing
+def collect_real_world_data():
+    real_data = []
+    sources = [Ethereum_API, Cosmos_API, Polkadot_API, DuneAnalytics, RatedNetwork...etc.] ---> *The sites are not finalized yet to fetch the data*
+    for api in sources:
+        real_data.extend(api.fetch_validator_logs())
+    return real_data
+
+def generate_synthetic_data():--->*Function for generating Synth data*
+    synthetic_data = agent_based_simulation(num_validators, scenario_params)
+    return synthetic_data 
+
+def enrich_data(real_data, synthetic_data):---->*Func for making the data enrich*
+    merged = merge_and_label(real_data, synthetic_data)
+    features = feature_engineer(merged)  # trust scores, entropy, peer reviews, etc.
+    return features  
+
+data = enrich_data(collect_real_world_data(), generate_synthetic_data())   
+
+ 
+
+***Phase 2:*** MARL Environment Setup
+class ValidatorAgent:
+    def __init__(self, validator_id):
+        self.id = validator_id
+        self.policy = initialize_policy()
+        self.trust_score = initial_trust()
+
+    def observe(self, network_state):
+        return extract_features(network_state, self.id)
+
+    def act(self, state):
+        # Action: propose block, attest, abstain, communicate, etc.
+        return self.policy.select_action(state)
+
+    def update_policy(self, reward, next_state):
+        self.policy.learn(reward, next_state)
+
+    def update_trust(self, event):
+        self.trust_score = update_trust_score(self.trust_score, event)
+
+agents = [ValidatorAgent(i) for i in validator_ids]
+env = PoSSimulationEnvironment(agents, data) 
+
+*End of Phase 2*
+
+
+***Phase 3:*** MARL Training and Validation Loop
+for episode in range(NUM_EPISODES):
+    state = env.reset()
+    done = False
+    while not done:
+        actions = {agent.id: agent.act(agent.observe(state)) for agent in agents}
+        next_state, rewards, events, done = env.step(actions)
+        for agent in agents:
+            agent.update_policy(rewards[agent.id], agent.observe(next_state))
+            agent.update_trust(events[agent.id])
+        state = next_state
+
+***Phase 4:*** Validator Selection & Explanation Module
+
+def select_validators(agents, k):
+    ranked = sorted(agents, key=lambda a: (a.trust_score, a.policy.recent_performance), reverse=True)
+    selected = ranked[:k]
+    return selected -----> #select top-k validators based on trust score and recent policy performance
+
+def explain_selection(selected, all_agents):
+    explanations = {}
+    for agent in selected:
+        input_data = agent.current_features
+        # XAI methods (e.g., SHAP, LIME) applied to agent policy decisions
+        explanations[agent.id] = XAI_explain(agent.policy, input_data)
+    return explanations ----->Generate XAI o/p for selected validators
+
+selected_validators = select_validators(agents, num_validators_to_select)
+explanations = explain_selection(selected_validators, agents) -----> Exexuting selection & explaination process 
+
+
+*EndOfPhase4--->Remaining phase will be uploaded later*
+
+
 
 ### ***References***
 - 1. *S. King and S. Nadal, “PPCoin: Peer-to-Peer Crypto-Currency with Proof-of-Stake,” Aug. 2012.*
