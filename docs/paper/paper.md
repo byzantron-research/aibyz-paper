@@ -128,7 +128,26 @@ for episode in range(NUM_EPISODES):
             agent.update_trust(events[agent.id])
         state = next_state
 
-*End of Phase 3*---> remaining phase will publish later
+***Phase 4:*** Validator Selection & Explanation Module
+
+def select_validators(agents, k):
+    ranked = sorted(agents, key=lambda a: (a.trust_score, a.policy.recent_performance), reverse=True)
+    selected = ranked[:k]
+    return selected -----> #select top-k validators based on trust score and recent policy performance
+
+def explain_selection(selected, all_agents):
+    explanations = {}
+    for agent in selected:
+        input_data = agent.current_features
+        # XAI methods (e.g., SHAP, LIME) applied to agent policy decisions
+        explanations[agent.id] = XAI_explain(agent.policy, input_data)
+    return explanations ----->Generate XAI o/p for selected validators
+
+selected_validators = select_validators(agents, num_validators_to_select)
+explanations = explain_selection(selected_validators, agents) -----> Exexuting selection & explaination process 
+
+
+*EndOfPhase4--->Remaining phase will be uploaded later*
 
 
 
