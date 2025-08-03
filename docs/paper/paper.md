@@ -147,7 +147,35 @@ selected_validators = select_validators(agents, num_validators_to_select)
 explanations = explain_selection(selected_validators, agents) -----> Exexuting selection & explaination process 
 
 
-*EndOfPhase4--->Remaining phase will be uploaded later*
+***Phase 5:*** Punishment & Auditability Module
+
+def penalize_and_explain(agents, detected_malicious):
+    for agent in detected_malicious:
+        agent.policy.penalize()
+        reason = XAI_explain(agent.policy, agent.current_features)
+        log_penalty_decision(agent.id, reason)
+
+malicious_agents = env.detect_malicious_agents()
+penalize_and_explain(agents, malicious_agents) ------> Penalize malicious agents and generate explainable reasons using XAI
+
+***Phase 6:*** Metrics Logging & Visualization
+
+def log_metrics(metrics):
+    save_to_dashboard(metrics)
+    # Includes: attack rate, fairness scores, throughput, explanation interpretability, etc.
+
+log_metrics(env.collect_performance_metrics()) ----->Collect and log key performance indicators for evaluation
+
+***Phase 7:*** Dataset & Model Export
+
+def export_final_dataset_and_models():
+    export_dataset(data, metadata, license="CC-BY-4.0")
+    export_models([agent.policy for agent in agents], documentation=True)
+
+export_final_dataset_and_models()
+
+
+
 
 
 
