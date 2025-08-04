@@ -1,0 +1,10 @@
+numpy
+pandas
+matplotlib
+gym
+stable-baselines3
+shap
+lime
+scikit-learn
+jupyter
+ipykernel
