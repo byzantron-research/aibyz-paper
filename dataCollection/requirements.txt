@@ -1,0 +1,9 @@
+requests>=2.32.3
+pydantic>=2.7.0
+pandas>=2.2.2
+pyarrow>=17.0.0
+tqdm>=4.66.4
+tenacity>=9.0.0
+python-dateutil>=2.9.0.post0
+substrate-interface>=1.7.8
+numpy>=1.26.4
