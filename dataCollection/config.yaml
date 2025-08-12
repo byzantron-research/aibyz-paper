@@ -1,0 +1,20 @@
+# Output format + partitioning
+format: parquet  # parquet|csv
+root: "."        # where raw/ curated/ features/ live under dataCollection
+
+# Chains & endpoints
+chains:
+  - chain_id: eth2
+    network: mainnet
+    beacon: "http://localhost:5052"   # Prefer local node
+    lookback_slots: 512               # used when --limit not given
+
+  - chain_id: cosmos
+    network: cosmoshub-4
+    rest: "https://cosmos-api.polkachu.com"
+    lookback_blocks: 2000
+
+  - chain_id: polkadot
+    network: mainnet
+    ws: "wss://rpc.polkadot.io"
+    lookback_blocks: 1000
