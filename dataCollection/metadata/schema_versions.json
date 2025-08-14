@@ -1,0 +1,8 @@
+{
+  "block_core": 1,
+  "validator_core": 1,
+  "attestation_core": 1,
+  "penalty_core": 1,
+  "validator_stats_daily": 1,
+  "trust_signals_daily": 1
+}
