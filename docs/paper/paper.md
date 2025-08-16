@@ -69,110 +69,33 @@ The flowchart outlines a structured, four-phase pipeline for building a comprehe
 
 ### Pseudocode:
 
-***Phase 1:*** Data Collection and Preprocessing
-def collect_real_world_data():
-    real_data = []
-    sources = [Ethereum_API, Cosmos_API, Polkadot_API, DuneAnalytics, RatedNetwork...etc.] ---> *The sites are not finalized yet to fetch the data*
-    for api in sources:
-        real_data.extend(api.fetch_validator_logs())
-    return real_data
+***Algorithm 1: Hybrid Dataset Construction for PoS Validator Behavior***
 
-def generate_synthetic_data():--->*Function for generating Synth data*
-    synthetic_data = agent_based_simulation(num_validators, scenario_params)
-    return synthetic_data 
+1:  Collect-Real()
+2:    For each chain in {Eth2, Cosmos, Polkadot}:
+3:      Pull validator histories: uptime, proposals, attestations, penalties, stake, latency
+4:      Normalize fields; append provenance tags
 
-def enrich_data(real_data, synthetic_data):---->*Func for making the data enrich*
-    merged = merge_and_label(real_data, synthetic_data)
-    features = feature_engineer(merged)  # trust scores, entropy, peer reviews, etc.
-    return features  
+5:  Simulate-Behaviors()
+6:    For profiles in {honest, lazy, selfish, Sybil, long-range}:
+7:      Generate episode sequences under varied network/threat params
+8:      Emit labeled logs
 
-data = enrich_data(collect_real_world_data(), generate_synthetic_data())   
+9:  Unify-and-Label()
+10:   Merge real + synthetic logs on validator/time keys
+11:   Assign behavior labels via heuristics; retain provenance
+
+12: Feature-Engineering()
+13:   Window time-series → missed events, deviation from consensus, entropy, peer feedback
+14:   Compute interim trust indicators
+
+15: Finalize-and-Version()
+16:   Write tables (CSV/JSON), schema, license
+17:   Record dataset version + changelog
+  
 
  
 
-***Phase 2:*** MARL Environment Setup
-class ValidatorAgent:
-    def __init__(self, validator_id):
-        self.id = validator_id
-        self.policy = initialize_policy()
-        self.trust_score = initial_trust()
-
-    def observe(self, network_state):
-        return extract_features(network_state, self.id)
-
-    def act(self, state):
-        # Action: propose block, attest, abstain, communicate, etc.
-        return self.policy.select_action(state)
-
-    def update_policy(self, reward, next_state):
-        self.policy.learn(reward, next_state)
-
-    def update_trust(self, event):
-        self.trust_score = update_trust_score(self.trust_score, event)
-
-agents = [ValidatorAgent(i) for i in validator_ids]
-env = PoSSimulationEnvironment(agents, data) 
-
-*End of Phase 2*
-
-
-***Phase 3:*** MARL Training and Validation Loop
-for episode in range(NUM_EPISODES):
-    state = env.reset()
-    done = False
-    while not done:
-        actions = {agent.id: agent.act(agent.observe(state)) for agent in agents}
-        next_state, rewards, events, done = env.step(actions)
-        for agent in agents:
-            agent.update_policy(rewards[agent.id], agent.observe(next_state))
-            agent.update_trust(events[agent.id])
-        state = next_state
-
-***Phase 4:*** Validator Selection & Explanation Module
-
-def select_validators(agents, k):
-    ranked = sorted(agents, key=lambda a: (a.trust_score, a.policy.recent_performance), reverse=True)
-    selected = ranked[:k]
-    return selected -----> #select top-k validators based on trust score and recent policy performance
-
-def explain_selection(selected, all_agents):
-    explanations = {}
-    for agent in selected:
-        input_data = agent.current_features
-        # XAI methods (e.g., SHAP, LIME) applied to agent policy decisions
-        explanations[agent.id] = XAI_explain(agent.policy, input_data)
-    return explanations ----->Generate XAI o/p for selected validators
-
-selected_validators = select_validators(agents, num_validators_to_select)
-explanations = explain_selection(selected_validators, agents) -----> Exexuting selection & explaination process 
-
-
-***Phase 5:*** Punishment & Auditability Module
-
-def penalize_and_explain(agents, detected_malicious):
-    for agent in detected_malicious:
-        agent.policy.penalize()
-        reason = XAI_explain(agent.policy, agent.current_features)
-        log_penalty_decision(agent.id, reason)
-
-malicious_agents = env.detect_malicious_agents()
-penalize_and_explain(agents, malicious_agents) ------> Penalize malicious agents and generate explainable reasons using XAI
-
-***Phase 6:*** Metrics Logging & Visualization
-
-def log_metrics(metrics):
-    save_to_dashboard(metrics)
-    # Includes: attack rate, fairness scores, throughput, explanation interpretability, etc.
-
-log_metrics(env.collect_performance_metrics()) ----->Collect and log key performance indicators for evaluation
-
-***Phase 7:*** Dataset & Model Export
-
-def export_final_dataset_and_models():
-    export_dataset(data, metadata, license="CC-BY-4.0")
-    export_models([agent.policy for agent in agents], documentation=True)
-
-export_final_dataset_and_models()
 
 
 
