@@ -123,7 +123,23 @@ Output: Trained policies and evolving trust scores
 16:     If terminal: break
 17:   Checkpoint policies and logs
  
+***Algorithm 3:* Trust-Aware Validator Selection with Explainability**
 
+Input: Current features, trust scores, recent policy performance
+Output: Selected set 𝑆 and explanations
+
+1:  Rank-Validators()
+2:    For each validator v:
+3:      score_v ← f(trust_v, recent_performance_v)
+4:    Order validators by score_v (desc)
+
+5:  Select-TopK(k)
+6:    S ← first k validators
+
+7:  Explain-Selections(S)
+8:    For each v ∈ S:
+9:      φ_v ← PostHocExplain(features_v, trust_traj_v)
+10:     Log {v, score_v, φ_v}
 
 
 
