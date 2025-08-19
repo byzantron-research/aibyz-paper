@@ -141,7 +141,28 @@ Output: Selected set 𝑆 and explanations
 9:      φ_v ← PostHocExplain(features_v, trust_traj_v)
 10:     Log {v, score_v, φ_v}
 
+***Algorithm 4:* Malicious Detection, Penalization, and Audit Trail**
 
+Input: Environment events, agent features, trust trajectories
+Output: Updated trust/penalties; auditable records
+
+1:  Detect-Anomalies()
+2:    For each validator v:
+3:      if ThresholdExceeded(events_v, Δtrust_v, features_v):
+4:         mark v as suspected
+
+5:  Apply-Penalties()
+6:    For each suspected v:
+7:      trust_v ← trust_v − penalty(v)         // heavier if slashed
+8:      state_v ← update(flags = {restricted?})
+
+9:  Explain-Penalties()
+10:   For each penalized v:
+11:     ψ_v ← PostHocExplain(triggering_factors_v)
+12:     Append to audit log: {v, penalty, ψ_v, evidence}
+
+13: Persist-Log()
+14:   Write immutable record for review
 
 
 
