@@ -164,6 +164,28 @@ Output: Updated trust/penalties; auditable records
 13: Persist-Log()
 14:   Write immutable record for review
 
+***Algorithm 5:* Evaluation, Metrics Logging, and Export**
+
+Input: Trained system; evaluation scenarios (benign/adversarial mixes)
+Output: Metrics dashboard and exported artifacts
+
+1:  Define-Scenarios()
+2:    Σ ← {baseline, mixed-adversary, stress-load, targeted-attack}
+
+3:  Evaluate(Σ)
+4:    For each scenario σ ∈ Σ:
+5:      Run episodes; collect outcomes, selections, penalties, explanations
+
+6:  Compute-Metrics()
+7:    Security   ← attack success rate, severity
+8:    Fairness   ← selection distribution among honest validators
+9:    Performance← confirmation latency, throughput
+10:   XAI        ← clarity/utility scores (expert/qualitative)
+
+11: Export-Artifacts()
+12:   Save policies, trust trajectories, metrics, final dataset/schema/license
+13:   Generate report tables/figures
+
 
 
 
