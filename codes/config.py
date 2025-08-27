@@ -6,6 +6,7 @@ from dataclasses import dataclass
 @dataclass
 class Config:
     # Data / files
+<<<<<<< HEAD
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -46,6 +47,17 @@ class Config:
     num_epochs: int = int(os.getenv("NUM_EPOCHS", "10"))
     action_space: int = 3  # 0=propose, 1=attest, 2=abstain
 
+=======
+    dataset_path: str = os.getenv("DATASET_PATH", r"F:\my_AI_Projects\REASEARCH\Quanteron\Byzantron\Codes\Akhun\aibyz-paper\codes\data\ethereum\validators_mvp.csv")
+    log_dir: str = os.getenv("LOG_DIR", "./logs")
+    checkpoint_dir: str = os.getenv("CHECKPOINT_DIR", "./checkpoints")
+
+    # Simulation
+    num_validators: int = int(os.getenv("NUM_VALIDATORS", "200"))
+    num_epochs: int = int(os.getenv("NUM_EPOCHS", "10"))
+    action_space: int = 3  # 0=propose, 1=attest, 2=abstain
+
+>>>>>>> f30ad86 (Refactor code structure for improved readability and maintainability)
     # Q-learning (tabular) — tiny & fast for MVP
     learning_rate: float = float(os.getenv("LEARNING_RATE", "0.1"))
     gamma: float = float(os.getenv("DISCOUNT_FACTOR", "0.95"))
