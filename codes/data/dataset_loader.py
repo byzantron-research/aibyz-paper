@@ -41,16 +41,29 @@ class DatasetLoader:
         return self.data
 
     def _align(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Map common upstream field aliases -> canonical names
+        alias_map = {
+            "validator_id": "validator_index",
+            "effective_balance": "effective_balance_gwei",
+            "att_missed": "att_missed_total",
+            "prop_missed": "prop_missed_total",
+        }
+        if any(k in df.columns for k in alias_map):
+            df = df.rename(
+                columns={k: v for k, v in alias_map.items()
+                         if k in df.columns and v not in df.columns}
+            )
         # Ensure required columns exist
         for col in REQUIRED_COLUMNS:
             if col not in df.columns:
                 df[col] = np.nan
 
         # Sanitize numeric columns
-        for col in ["effective_balance_gwei","attestations_total","att_missed_total","proposals_total","prop_missed_total"]:
+        for col in ["validator_index","effective_balance_gwei","attestations_total","att_missed_total","proposals_total","prop_missed_total"]:
             df[col] = pd.to_numeric(df[col], errors="coerce")
 
         # Fill NaNs with sensible defaults
+
         def normalize_slashed(val):
             if pd.isna(val):
                 return False
@@ -74,6 +87,9 @@ class DatasetLoader:
         df["proposals_total"] = df["proposals_total"].fillna(0)
         df["prop_missed_total"] = df["prop_missed_total"].fillna(0)
         df["effective_balance_gwei"] = df["effective_balance_gwei"].fillna(0)
+        # Drop rows with NaN validator_index and cast to int
+        df = df.dropna(subset=["validator_index"])
+        df["validator_index"] = df["validator_index"].astype(int)
 
         # Derive features
         # stake normalized to [0,1] with cap at 32 ETH = 32e9 gwei
