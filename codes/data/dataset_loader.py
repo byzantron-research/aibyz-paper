@@ -90,14 +90,6 @@ class DatasetLoader:
         df["missed_att"] = df["att_missed_total"].astype(int)
         df["missed_prop"] = df["prop_missed_total"].astype(int)
 
-        # Trim to the columns we actually use downstream
-        keep = ["validator_index","slashed","stake","uptime","missed_att","missed_prop"]
-    df["validator_index"] = pd.to_numeric(df["validator_index"], errors="coerce").astype("Int64")
-
-    aligned = df[keep].dropna(subset=["validator_index"]).copy()
-    aligned["validator_index"] = aligned["validator_index"].astype(int)
-
-    return aligned
 
     def get(self) -> pd.DataFrame:
         if self.data is None:
