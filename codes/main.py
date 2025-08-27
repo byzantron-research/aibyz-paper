@@ -1,12 +1,17 @@
 # main.py - Orchestrates the full pipeline end-to-end (MVP)
 
-from config import Config
-from data.dataset_loader import DatasetLoader
-from environment.pos_env import PoSEnvironment
-from agent.marl_agent import MARLAgent
-from xai.explainer import explain_selection
-from evaluate import select_top_validators, detect_malicious_agents, penalize_and_explain, export_final_dataset_and_models
-import utils
+from codes.config import Config
+from codes.data.dataset_loader import DatasetLoader
+from codes.environment.pos_env import PoSEnvironment
+from codes.agent.marl_agent import MARLAgent
+from codes.xai.explainer import explain_selection
+from codes.evaluate import (
+    select_top_validators,
+    detect_malicious_agents,
+    penalize_and_explain,
+    export_final_dataset_and_models,
+)
+from codes import utils
 import os
 
 def train():
