@@ -1,33 +1,71 @@
-# main.py - generated as part of modular structure
-# main.py - Orchestrates the full pipeline: training, selection, explanation, punishment, and export
-# This code will need to be changed further, a skeleteon draft is being written here
-from train import train
-from evaluate import select_top_validators, penalize_and_explain, export_final_dataset_and_models
-from xai.explainer import explain_selection
+# main.py - Orchestrates the full pipeline end-to-end (MVP)
+
+from codes.config import Config
+from codes.data.dataset_loader import DatasetLoader
+from codes.environment.pos_env import PoSEnvironment
+from codes.agent.marl_agent import MARLAgent
+from codes.xai.explainer import explain_selection
+from codes.evaluate import (
+    select_top_validators,
+    detect_malicious_agents,
+    penalize_and_explain,
+    export_final_dataset_and_models,
+)
+from codes import utils
+import os
+
+def train():
+    cfg = Config()
+    utils.ensure_dir(cfg.log_dir)
+
+    # Load & align dataset
+    df = DatasetLoader(cfg.dataset_path).get()
+    env = PoSEnvironment(cfg, df)
+
+    # Build agents (one per validator row)
+    agents = []
+    for vid in env.list_validator_ids():
+        agents.append(MARLAgent(agent_id=vid, config=cfg))
+
+    # Training loop (tabular Q-learning)
+    log_file = os.path.join(cfg.log_dir, "trust_metrics.csv")
+    utils.init_csv(log_file, ["episode", "avg_trust"])
+
+    for ep in range(cfg.num_epochs):
+        trusts = []
+        for a in agents:
+            s = env.get_agent_state(a.agent_id)
+            a.observe_state(s)
+            action = a.select_action()
+            s2, reward, done, info = env.step_agent(a.agent_id, action)
+            a.update(s2, reward, done)
+            # Use missed_att + missed_prop as a simple "missed blocks" proxy
+            a.update_trust_score(info["uptime"], info["missed_att"] + info["missed_prop"], info["slashed"])
+            a.decay_epsilon()
+            trusts.append(a.trust)
+        avg_trust = sum(trusts) / len(trusts)
+        utils.log_metrics(log_file, ep+1, avg_trust)
+        print(f"[Episode {ep+1}] Avg Trust = {avg_trust:.3f}")
+
+    return agents, env, cfg
 
 if __name__ == "__main__":
-    # Run the training phase (MARL simulation)
-    agents, env, config = train()
+    agents, env, cfg = train()
 
-    # Phase 4: Validator Selection (choose top validators based on trust)
-    top_k = 5 if config.num_validators >= 5 else config.num_validators  # select top 5 or fewer if small set
+    # Selection
+    top_k = min(5, len(agents))
     top_agents = select_top_validators(agents, k=top_k)
-    print(f"Top {top_k} validators selected based on trust scores: {[agent.agent_id for agent in top_agents]}")
+    print(f"Top {top_k} validators:", [a.agent_id for a in top_agents])
 
-    # Phase 4: Explanation of selection using XAI (simple metrics-based explanation)
+    # Explanations
     explanations = explain_selection(top_agents)
-    print("Selection explanations (recent metrics contributing to trust):")
-    for agent_id, factors in explanations.items():
-        print(f" - Validator {agent_id}: {factors}")
+    print("[Explain] Selection factors:")
+    for vid, ex in explanations.items():
+        print(f" - {vid}: {ex}")
 
-    # Phase 5: Punishment & Auditability (identify and penalize malicious validators)
-    malicious_ids = env.detect_malicious_agents()
-    if malicious_ids:
-        malicious_agents = [agent for agent in agents if agent.agent_id in malicious_ids]
-        penalize_and_explain(malicious_agents)
-    else:
-        print("No malicious validators detected (no trust score below threshold).")
+    # Penalization
+    bad = detect_malicious_agents(agents, threshold=0.2)
+    penalize_and_explain(bad)
 
-    # Phase 6 & 7: Logging metrics and exporting results (already logged during training, now export final data)
-    export_final_dataset_and_models(env, agents, config.log_dir)
-    print("Pipeline execution complete.")
+    # Export (optional)
+    export_final_dataset_and_models(env, agents, cfg.log_dir)
