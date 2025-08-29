@@ -38,3 +38,24 @@ class Config:
     def epsilon(self) -> float:
         # Alias to maintain old API: return initial epsilon value
         return self.epsilon_start
+    def __post_init__(self):
+        # Trust-related params
+        if not (0.0 <= self.initial_trust <= 1.0):
+            raise ValueError(f"initial_trust must be in [0.0, 1.0], got {self.initial_trust}")
+        if not (0.0 <= self.trust_decay <= 1.0):
+            raise ValueError(f"trust_decay must be in [0.0, 1.0], got {self.trust_decay}")
+        if not (0.0 <= self.trust_reward_weight <= 1.0):
+            raise ValueError(f"trust_reward_weight must be in [0.0, 1.0], got {self.trust_reward_weight}")
+        if not (0.0 <= self.trust_penalty_weight <= 1.0):
+            raise ValueError(f"trust_penalty_weight must be in [0.0, 1.0], got {self.trust_penalty_weight}")
+        # Q-learning checks
+        if not (0.0 < self.learning_rate <= 1.0):
+            raise ValueError(f"learning_rate must be in (0.0, 1.0], got {self.learning_rate}")
+        if not (0.0 < self.gamma <= 1.0):
+            raise ValueError(f"gamma (discount factor) must be in (0.0, 1.0], got {self.gamma}")
+        if not (0.0 <= self.epsilon_min <= 1.0):
+            raise ValueError(f"epsilon_min must be in [0.0, 1.0], got {self.epsilon_min}")
+        if not (0.0 <= self.epsilon_start <= 1.0):
+            raise ValueError(f"epsilon_start must be in [0.0, 1.0], got {self.epsilon_start}")
+        if not (0.0 < self.epsilon_decay <= 1.0):
+            raise ValueError(f"epsilon_decay must be in (0.0, 1.0], got {self.epsilon_decay}")
