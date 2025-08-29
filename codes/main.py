@@ -40,7 +40,11 @@ def train():
             s2, reward, done, info = env.step_agent(a.agent_id, action)
             a.update(s2, reward, done)
             # Use missed_att + missed_prop as a simple "missed blocks" proxy
-            a.update_trust_score(info["uptime"], info["missed_att"] + info["missed_prop"], info["slashed"])
+            a.update_trust_score(
+                info["uptime"],
+                info["missed_att"] + info["missed_prop"],
+                info["slashed"]
+            )
             a.decay_epsilon()
             trusts.append(a.trust)
         avg_trust = sum(trusts) / len(trusts)

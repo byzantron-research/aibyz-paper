@@ -42,7 +42,14 @@ class MARLAgent(BaseAgent):
         self.state = next_state
 
     def update_trust_score(self, uptime, missed_blocks, slashed):
-        self.trust = update_trust(self.trust, uptime, missed_blocks, slashed)
+        self.trust = update_trust(
+            self.trust,
+            uptime,
+            missed_blocks,
+            slashed,
+            reward_weight=getattr(self.cfg, 'trust_reward_weight', 0.7),
+            penalty_weight=getattr(self.cfg, 'trust_penalty_weight', 0.3)
+        )
         # cache for explanations
         self.last_uptime = float(uptime)
         self.last_missed_blocks = int(missed_blocks)
