@@ -1,44 +1,10 @@
-# config.py - Updated configuration with a simple Config class
-
-import os
-from dataclasses import dataclass
-
-@dataclass
-class Config:
-    # Data / files
-<<<<<<< HEAD
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
 @dataclass
 class Config:
-    dataset_path: str = field(default_factory=lambda:
-        os.getenv("DATASET_PATH") or
-        str(
-            Path(__file__).resolve().parent
- class Config:
-     learning_rate: float = float(os.getenv("LEARNING_RATE", "0.1"))
-     gamma: float = float(os.getenv("DISCOUNT_FACTOR", "0.95"))
-     epsilon_start: float = float(os.getenv("EPSILON_START", "1.0"))
-     epsilon_decay: float = float(os.getenv("EPSILON_DECAY", "0.97"))
-     epsilon_min: float = float(os.getenv("EPSILON_MIN", "0.1"))
-
-     # Back-compat helpers for dict-style access in downstream code
-     def __getitem__(self, key: str):
-         # Direct mapping for existing attributes: learning_rate, gamma, action_space, etc.
-         if hasattr(self, key):
-             return getattr(self, key)
-         # Legacy alias for epsilon (previously a single value before start/decay/min)
-         if key == "epsilon":
-             return self.epsilon_start
-         raise KeyError(f"Config has no key '{key}'")
-
-     @property
-     def epsilon(self) -> float:
-         # Alias to maintain old API: return initial epsilon value
-         return self.epsilon_start
-    # … other fields …
+    dataset_path: str = field(default_factory=lambda: os.getenv("DATASET_PATH") or str(Path(__file__).resolve().parent / "data" / "ethereum" / "validators_mvp.csv"))
     log_dir: str = os.getenv("LOG_DIR", "./logs")
     checkpoint_dir: str = os.getenv("CHECKPOINT_DIR", "./checkpoints")
 
@@ -47,58 +13,6 @@ class Config:
     num_epochs: int = int(os.getenv("NUM_EPOCHS", "10"))
     action_space: int = 3  # 0=propose, 1=attest, 2=abstain
 
-=======
-    dataset_path: str = os.getenv("DATASET_PATH", r"F:\my_AI_Projects\REASEARCH\Quanteron\Byzantron\Codes\Akhun\aibyz-paper\codes\data\ethereum\validators_mvp.csv")
-    log_dir: str = os.getenv("LOG_DIR", "./logs")
-    checkpoint_dir: str = os.getenv("CHECKPOINT_DIR", "./checkpoints")
-
-    # Simulation
-    num_validators: int = int(os.getenv("NUM_VALIDATORS", "200"))
-    num_epochs: int = int(os.getenv("NUM_EPOCHS", "10"))
-    # Back-compat aliases for existing training loop
-    num_episodes: int = int(os.getenv("NUM_EPISODES", "10"))
-from dataclasses import dataclass
-from dataclasses import asdict
-
-@dataclass
-class Config:
-    # Q-learning (tabular) — tiny & fast for MVP
-    learning_rate: float = float(os.getenv("LEARNING_RATE", "0.1"))
-    gamma: float = float(os.getenv("DISCOUNT_FACTOR", "0.95"))
-    epsilon_start: float = float(os.getenv("EPSILON_START", "1.0"))
-    epsilon_decay: float = float(os.getenv("EPSILON_DECAY", "0.97"))
-    epsilon_min: float = float(os.getenv("EPSILON_MIN", "0.1"))
-
-    # Back-compat helpers
-    def __getitem__(self, key: str):
-        return getattr(self, key)
-
-    @property
-    def epsilon(self) -> float:
-        # default initial epsilon for agents that expect a single value
-        return self.epsilon_start
-
-    def as_dict(self) -> dict:
-        return asdict(self)
-    gamma: float = float(os.getenv("DISCOUNT_FACTOR", "0.95"))
-    epsilon_start: float = float(os.getenv("EPSILON_START", "1.0"))
-    epsilon_decay: float = float(os.getenv("EPSILON_DECAY", "0.97"))
-    epsilon_min: float = float(os.getenv("EPSILON_MIN", "0.1"))
-
-    # Back-compat helpers
-    def __getitem__(self, key: str):
-        return getattr(self, key)
-
-    @property
-    def epsilon(self) -> float:
-        # default initial epsilon for agents that expect a single value
-        return self.epsilon_start
-
-    def as_dict(self) -> dict:
-        return asdict(self)
-    action_space: int = 3  # 0=propose, 1=attest, 2=abstain
-
->>>>>>> f30ad86 (Refactor code structure for improved readability and maintainability)
     # Q-learning (tabular) — tiny & fast for MVP
     learning_rate: float = float(os.getenv("LEARNING_RATE", "0.1"))
     gamma: float = float(os.getenv("DISCOUNT_FACTOR", "0.95"))
@@ -111,3 +25,16 @@ class Config:
     trust_decay: float = 0.01
     trust_reward_weight: float = 0.7
     trust_penalty_weight: float = 0.3
+
+    # Back-compat helpers for dict-style access in downstream code
+    def __getitem__(self, key: str):
+        if hasattr(self, key):
+            return getattr(self, key)
+        if key == "epsilon":
+            return self.epsilon_start
+        raise KeyError(f"Config has no key '{key}'")
+
+    @property
+    def epsilon(self) -> float:
+        # Alias to maintain old API: return initial epsilon value
+        return self.epsilon_start
