@@ -48,6 +48,11 @@ class Config:
             raise ValueError(f"trust_reward_weight must be in [0.0, 1.0], got {self.trust_reward_weight}")
         if not (0.0 <= self.trust_penalty_weight <= 1.0):
             raise ValueError(f"trust_penalty_weight must be in [0.0, 1.0], got {self.trust_penalty_weight}")
+            # Cap trust weights if their sum exceeds 1.0
+            trust_sum = self.trust_reward_weight + self.trust_penalty_weight
+            if trust_sum > 1.0:
+                self.trust_reward_weight /= trust_sum
+                self.trust_penalty_weight /= trust_sum
         # Q-learning checks
         if not (0.0 < self.learning_rate <= 1.0):
             raise ValueError(f"learning_rate must be in (0.0, 1.0], got {self.learning_rate}")
@@ -59,3 +64,6 @@ class Config:
             raise ValueError(f"epsilon_start must be in [0.0, 1.0], got {self.epsilon_start}")
         if not (0.0 < self.epsilon_decay <= 1.0):
             raise ValueError(f"epsilon_decay must be in (0.0, 1.0], got {self.epsilon_decay}")
+            # Invariant: epsilon_min <= epsilon_start
+            if self.epsilon_min > self.epsilon_start:
+                raise ValueError(f"epsilon_min ({self.epsilon_min}) must be <= epsilon_start ({self.epsilon_start}) for valid exploration scheduling.")
