@@ -8,6 +8,9 @@ from agent.trust_score import update_trust
 import utils  # to be implemented next, and this file will be updated regularly on the necessity of the required reusable fuctions
 import os
 
+# train.py - Thin wrapper to call codes.main.train() for consistency with the main pipeline.
+from codes.main import train
+
 def train():
     # Load configuration
     config = Config()
@@ -45,8 +48,8 @@ def train():
                     uptime=env.get_uptime(vid),
                     missed_blocks=env.get_missed_blocks(vid),
                     slashed=env.get_slashed(vid),
-                    reward_weight=getattr(config, 'trust_reward_weight', 0.7),
-                    penalty_weight=getattr(config, 'trust_penalty_weight', 0.3)
+                    reward_weight=getattr(config, 'trust_reward_weight', 0.7)
+                    # penalty_weight=getattr(config, 'trust_penalty_weight', 0.3)
                 )
 
             if done:
