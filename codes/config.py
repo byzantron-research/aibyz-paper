@@ -62,8 +62,6 @@ class Config:
             raise ValueError(f"epsilon_min must be in [0.0, 1.0], got {self.epsilon_min}")
         if not (0.0 <= self.epsilon_start <= 1.0):
             raise ValueError(f"epsilon_start must be in [0.0, 1.0], got {self.epsilon_start}")
-        if not (0.0 < self.epsilon_decay <= 1.0):
-            raise ValueError(f"epsilon_decay must be in (0.0, 1.0], got {self.epsilon_decay}")
-            # Invariant: epsilon_min <= epsilon_start
-            if self.epsilon_min > self.epsilon_start:
-                raise ValueError(f"epsilon_min ({self.epsilon_min}) must be <= epsilon_start ({self.epsilon_start}) for valid exploration scheduling.")
+        if not (0.0 < self.epsilon_decay <= 1.0) and self.epsilon_min > self.epsilon_start:
+            raise ValueError(f"epsilon_min ({self.epsilon_min}) must be <= epsilon_start ({self.epsilon_start}) for valid exploration scheduling.")
+
