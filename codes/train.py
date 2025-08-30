@@ -1,3 +1,6 @@
+"""
+train.py - Thin wrapper to call codes.main.train() for consistency with the main pipeline.
+"""
 # train.py - generated as part of modular structure
 # codes/train.py
 
