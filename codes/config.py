@@ -1,3 +1,6 @@
+# Trust score config weights (pipeline-aligned defaults, for non-class usage)
+trust_reward_weight = 0.05  # Weight for uptime reward in trust score
+trust_penalty_weight = 0.01  # Weight for missed blocks penalty in trust score
 import os
 from dataclasses import dataclass, field
 from pathlib import Path

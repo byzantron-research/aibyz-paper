@@ -1,33 +1,17 @@
-# trust_score.py - generated as part of modular structure
-
-
 def update_trust(current_trust, uptime, missed_blocks, slashed, reward_weight=0.7, penalty_weight=0.3):
-    """
-    Update the trust score of a validator based on performance metrics.
 
-    Parameters:
-    - current_trust (float): Existing trust score (0.0 to 1.0)
-    - uptime (float): Uptime in percentage (0.0 to 1.0)
-    - missed_blocks (int): Number of missed blocks
-    - slashed (bool): Whether the validator was slashed
-    - reward_weight (float): Weight for uptime reward (default 0.7)
-    - penalty_weight (float): Weight for missed blocks penalty (default 0.3)
-
-    Returns:
-    - float: Updated trust score (0.0 to 1.0)
-    """
 
 def adaptive_trust_score(uptime, missed_blocks, slashed, prev_trust=0.5, reward_weight=None, penalty_weight=None, config=None):
     """
-    Adaptive trust score update, pipeline-aligned and config-driven.
+    Canonical trust score update function (config-driven, pipeline-aligned).
     Args:
         uptime (float): Validator uptime (0-1)
-        missed_blocks (int): Total missed blocks
-        slashed (bool): Slashing event
+        missed_blocks (int): Total missed blocks (attestations + proposals)
+        slashed (bool): Whether validator was slashed
         prev_trust (float): Previous trust score
-        reward_weight (float): Weight for uptime reward (from config if None)
-        penalty_weight (float): Weight for missed blocks penalty (from config if None)
-        config (object): Config object with trust_reward_weight and trust_penalty_weight
+        reward_weight (float, optional): Weight for reward (from config, default 0.05)
+        penalty_weight (float, optional): Weight for penalty (from config, default 0.01)
+        config (object, optional): Config object with trust_reward_weight and trust_penalty_weight
     Returns:
         float: Updated trust score
     """
@@ -44,7 +28,6 @@ def adaptive_trust_score(uptime, missed_blocks, slashed, prev_trust=0.5, reward_
     trust = prev_trust
     if slashed:
         trust *= 0.5  # pipeline slashing rule
-    trust += reward_weight * uptime
-    trust -= penalty_weight * missed_blocks
+    trust += reward_weight * uptime - penalty_weight * (missed_blocks / 10.0)
     trust = max(0.0, min(1.0, trust))
     return trust
