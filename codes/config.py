@@ -1,3 +1,6 @@
+# Trust score config weights (pipeline-aligned defaults, for non-class usage)
+trust_reward_weight = 0.05  # Weight for uptime reward in trust score
+trust_penalty_weight = 0.01  # Weight for missed blocks penalty in trust score
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -23,8 +26,9 @@ class Config:
     # Trust score params
     initial_trust: float = 0.5
     trust_decay: float = 0.01
-    trust_reward_weight: float = 0.7
-    trust_penalty_weight: float = 0.3
+    # Trust score config-driven weights (pipeline-aligned defaults)
+    trust_reward_weight: float = 0.05  # Default matches notebook pipeline
+    trust_penalty_weight: float = 0.01  # Default matches notebook pipeline
 
     # Back-compat helpers for dict-style access in downstream code
     def __getitem__(self, key: str):
