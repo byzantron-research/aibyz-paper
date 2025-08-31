@@ -13,21 +13,11 @@ def adaptive_trust_score(uptime, missed_blocks, slashed, prev_trust=0.5, reward_
         penalty_weight (float, optional): Weight for penalty (from config, default 0.01)
         config (object, optional): Config object with trust_reward_weight and trust_penalty_weight
     Returns:
-        float: Updated trust score
+    - float: Updated trust score (0.0 to 1.0)
     """
-    if config is not None:
-        if reward_weight is None:
-            reward_weight = getattr(config, 'trust_reward_weight', 0.05)
-        if penalty_weight is None:
-            penalty_weight = getattr(config, 'trust_penalty_weight', 0.01)
-    else:
-        if reward_weight is None:
-            reward_weight = 0.05
-        if penalty_weight is None:
-            penalty_weight = 0.01
-    trust = prev_trust
+    trust = current_trust
     if slashed:
-        trust *= 0.5  # pipeline slashing rule
+        trust *= 0.5  # Severe penalty
     trust += reward_weight * uptime - penalty_weight * (missed_blocks / 10.0)
     trust = max(0.0, min(1.0, trust))
     return trust
